@@ -1,0 +1,377 @@
+{
+	"info": {
+		"_postman_id": "927ebae6-9b25-47e7-9c27-c4488223b03c",
+		"name": "APICollection_deckofcardsapi.com",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30897043"
+	},
+	"item": [
+		{
+			"name": "1_Load and Verify Contents from Home Page",
+			"item": [
+				{
+					"name": "READ/LOAD_HomePage",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Deck of Cards\");\r",
+									"});\r",
+									"\r",
+									"//good to verify all sections in the page"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://deckofcardsapi.com/",
+							"protocol": "https",
+							"host": [
+								"deckofcardsapi",
+								"com"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2_Get A Brand New Deck",
+			"item": [
+				{
+					"name": "CREATE_ANewDeck",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.success).to.exist;\r",
+									"    pm.expect(responseData.deck_id).to.exist;\r",
+									"    pm.expect(responseData.remaining).to.exist;\r",
+									"    pm.expect(responseData.shuffled).to.exist;\r",
+									"\r",
+									"    //Set Global variable for \r",
+									"    pm.globals.set(\"var_deck_id\", responseData.deck_id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if success is a boolean value\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.success).to.be.a('boolean');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"deck_id is a non-empty string\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.deck_id).to.be.a('string').and.to.have.lengthOf.at.least(12);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Remaining is a non-negative integer whose value is 52\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.remaining).to.exist.and.to.be.a('number');\r",
+									"    pm.expect(responseData.remaining).to.have.equals(52);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The 'shuffled' property should be a boolean value with default value set to FALSE\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.shuffled).to.be.a('boolean').and.to.have.equals(false);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "https://deckofcardsapi.com/api/deck/new/",
+							"protocol": "https",
+							"host": [
+								"deckofcardsapi",
+								"com"
+							],
+							"path": [
+								"api",
+								"deck",
+								"new",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3_Shuffle an Existing New Deck",
+			"item": [
+				{
+					"name": "UPDATE_ShuffleTheGivenDeck",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Response has required fields\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData).to.be.an('object');\r",
+									"    pm.expect(responseData.success).to.exist;\r",
+									"    pm.expect(responseData.deck_id).to.exist;\r",
+									"    pm.expect(responseData.remaining).to.exist;\r",
+									"    pm.expect(responseData.shuffled).to.exist;\r",
+									"\r",
+									"    //Set Global variable for \r",
+									"    pm.globals.set(\"var_deck_id\", responseData.deck_id);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Check if success is a boolean value\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.success).to.be.a('boolean');\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"VITAL: deck_id matches with provided deck_id\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.deck_id).to.be.a('string').and.to.have.equals(pm.globals.get(\"var_deck_id\"));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Remaining is a non-negative integer whose value is 52\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.remaining).to.exist.and.to.be.a('number');\r",
+									"    pm.expect(responseData.remaining).to.have.equals(52);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"The 'shuffled' property should be a boolean value with default value set to TRUE\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"\r",
+									"    pm.expect(responseData.shuffled).to.be.a('boolean').and.to.have.equals(true);\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://deckofcardsapi.com/api/deck/{{var_deck_id}}/shuffle/",
+							"protocol": "https",
+							"host": [
+								"deckofcardsapi",
+								"com"
+							],
+							"path": [
+								"api",
+								"deck",
+								"{{var_deck_id}}",
+								"shuffle",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "4_Draw Cards 2 (Players) x3 (Times)",
+			"item": [
+				{
+					"name": "UPDATE_DrawCards",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//clean up the console\r",
+									"console.clear();\r",
+									"\r",
+									"// Verification test step\r",
+									"pm.test(\"Response has count of cards drawn equals to the count query parameter\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    var ct = pm.request.url.query.get('count');\r",
+									"    pm.expect(responseData.cards.length).to.be.equal(parseInt(ct));\r",
+									"});\r",
+									"\r",
+									"// Verification test step to make sure the deck has atleast 6 cards\r",
+									"pm.test(\"Remaining cards in the deck should be 6 or more\", function () {\r",
+									"    const responseData = pm.response.json();\r",
+									"    pm.expect(responseData.remaining).to.be.greaterThan(parseInt(6));\r",
+									"});\r",
+									"\r",
+									"\r",
+									"// Function to calculate the sum of values for a player\r",
+									"function calculateSum(playerCards) {\r",
+									"  let sum = 0;\r",
+									"  let aceCount = 0;\r",
+									"\r",
+									"  for (let i = 0; i < playerCards.length; i++) {\r",
+									"    let card = playerCards[i];\r",
+									"\r",
+									"    // check if the card is a number\r",
+									"    if (!isNaN(card[0])) {\r",
+									"      sum += Number(card[0]);\r",
+									"       // check if the card is Ace\r",
+									"    } else if (card[0] === 'A') {\r",
+									"      aceCount++;\r",
+									"      // check if the card is either J,Q or K\r",
+									"    } else {\r",
+									"      sum += 10;\r",
+									"    }\r",
+									"  }\r",
+									"\r",
+									"    // Ace value based on cards count\r",
+									"  for (let i = 0; i < aceCount; i++) {\r",
+									"    if (sum + 11 > 21) {\r",
+									"      sum += 1;\r",
+									"    } else {\r",
+									"      sum += 11;\r",
+									"    }\r",
+									"  }\r",
+									"\r",
+									"  return sum;\r",
+									"}\r",
+									"\r",
+									"// Extract cards for player 1 and player 2\r",
+									"const responseData = pm.response.json();\r",
+									"const player1 = [];\r",
+									"const player2 = [];\r",
+									"\r",
+									"for (let i = 0; i < responseData.cards.length; i++) {\r",
+									"  let card = responseData.cards[i];\r",
+									"\r",
+									"  if (i % 2 === 0) {\r",
+									"    player1.push(card.code);\r",
+									"  } else {\r",
+									"    player2.push(card.code);\r",
+									"  }\r",
+									"}\r",
+									"\r",
+									"// Store player cards in global variables for reference and for easier debugging\r",
+									"pm.globals.set(\"var_player1_clist\", player1);\r",
+									"pm.globals.set(\"var_player2_clist\", player2);\r",
+									"\r",
+									"// Calculate the sum of card values for each player\r",
+									"const sumPlayer1 = calculateSum(player1);\r",
+									"const sumPlayer2 = calculateSum(player2);\r",
+									"\r",
+									"// Display the sums in the console\r",
+									"console.log(\"Sum of all the cards for Player1 is \" + sumPlayer1);\r",
+									"console.log(\"Sum of all the cards for Player2 is \" + sumPlayer2);\r",
+									"\r",
+									"// function that checks if the player has a blackjack\r",
+									"function checkBlackjack(playerName, sum) {\r",
+									"  if (sum === 21) {\r",
+									"    console.log(playerName + \" is a BLACKJACK\");\r",
+									"  }\r",
+									"}\r",
+									"\r",
+									"// Checking each player for a Blackjack\r",
+									"checkBlackjack(\"PLAYER1\", sumPlayer1);\r",
+									"checkBlackjack(\"PLAYER2\", sumPlayer2);\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"//pm.globals.set(\"var_draw_count\", 6);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://deckofcardsapi.com/api/deck/{{var_deck_id}}/draw/?count=6",
+							"protocol": "https",
+							"host": [
+								"deckofcardsapi",
+								"com"
+							],
+							"path": [
+								"api",
+								"deck",
+								"{{var_deck_id}}",
+								"draw",
+								""
+							],
+							"query": [
+								{
+									"key": "count",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
